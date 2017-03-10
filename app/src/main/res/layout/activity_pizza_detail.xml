@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/main_details_container">
+
+    <ScrollView android:layout_weight="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+            <TextView android:id="@+id/location_name"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:layout_marginLeft="5dp"
+                      android:text="name"/>
+
+            <TextView android:id="@+id/location_address"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:layout_marginLeft="5dp"
+                      android:text="address"/>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/location_rating"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:text="3"/>
+
+                <TextView
+                        android:id="@+id/location_price"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="$$"/>
+
+                <TextView
+                        android:id="@+id/photos"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:textColor="#0000FF"
+                        android:text="Photos"/>
+            </LinearLayout>
+
+            <TextView android:id="@+id/location_phone"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:layout_marginLeft="5dp"
+                      android:text="phone"
+                      android:autoLink="phone"/>
+
+            <TextView android:id="@+id/location_website"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:layout_marginLeft="5dp"
+                      android:text="web site"
+                      android:autoLink="web"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="500"
+            android:layout_gravity="bottom"
+            class="com.google.android.gms.maps.MapFragment" />
+
+</LinearLayout>

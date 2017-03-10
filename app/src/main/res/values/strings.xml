@@ -1,0 +1,19 @@
+<resources>
+
+    <string name="app_name">Pizza Finder</string>
+    <string name="loading">Loading…</string>
+    <string name="progressDefaultText">Finding Your Location…</string>
+    <string name="nearest_places">This list displays the nearest pizza to your current location.</string>
+    <string name="ratingLBL">Rating: </string>
+    <string name="settings">Settings</string>
+    <string name="reload">Reload</string>
+    <string name="save">Save</string>
+    <string name="search_area">Search Radius (meters)</string>
+    <string name="search_area_hint">4000</string>
+    <string name="ok_text">OK</string>
+    <string name="next_text">Next</string>
+    <string name="warning_text">Warning</string>
+    <string name="dialog_text">The radius must be a value between 1 and 50000.</string>
+    <string name="location_images">Pizza Location Images</string>
+
+</resources>

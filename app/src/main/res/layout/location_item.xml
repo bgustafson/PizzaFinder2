@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<ImageView android:layout_height="wrap_content"
+           android:layout_width="wrap_content"
+           android:layout_marginRight="5dp"
+           android:src="@drawable/pizza_slice"/>
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_marginTop="5dp">
+
+        <TextView android:id="@+id/name"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="#FFFFFF"
+                tools:text="Rosati's"/>
+
+        <TextView android:id="@+id/address"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="#FFFFFF"
+                  tools:text="123 fake st"/>
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+
+            <TextView android:id="@+id/rating"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="8dp" tools:text="3"/>
+
+            <TextView android:id="@+id/price"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="#FFFFFF"
+                    tools:text="$$"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+	<!-- An image on the left and then the name, address, rating and price.  The last two on the same line.
+         Swiping on one of these should open the details view
+         http://developer.android.com/design/patterns/multi-pane-layouts.html -->
+
+</LinearLayout>
