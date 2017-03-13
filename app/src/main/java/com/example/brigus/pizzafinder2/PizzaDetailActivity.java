@@ -48,8 +48,9 @@ public class PizzaDetailActivity extends AppCompatActivity implements OnMapReady
     private static final String AD_Unit_ID = "ca-app-pub-3892677699343303/2379904475";
     private String Test_Hashed_Device_ID;
     private PizzaLocation location;
-    private TextView tvName, tvAddress, tvRating, tvPrice, tvPhone, tvWebSite, tvPhotos;
-    private LinearLayout progressBarContainer, mainContainer;
+    private TextView tvName, tvAddress, tvRating, tvPrice, tvPhone, tvWebSite;
+    ImageButton imgBtnPhotos;
+    private LinearLayout mainContainer;
     private String idNumber;
     private MapFragment map;
     private LatLng coordinates;
@@ -73,12 +74,16 @@ public class PizzaDetailActivity extends AppCompatActivity implements OnMapReady
                 .addOnConnectionFailedListener(this)
                 .build();
 
-
         mainContainer = (LinearLayout) findViewById(R.id.main_details_container);
         location = getIntent().getParcelableExtra("location");
         coordinates = new LatLng(location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
         idNumber = location.getId();
+
+        //Photos: Callable, start running on a background thread
+        mPool = Executors.newFixedThreadPool(1);
+        Callable<HashMap<String, Bitmap>> photosCallable = new PhotosCallable(mGoogleApiClient, idNumber);
+        mFuture = mPool.submit(photosCallable);
 
         //Name
         tvName = (TextView) findViewById(R.id.location_name);
@@ -105,13 +110,23 @@ public class PizzaDetailActivity extends AppCompatActivity implements OnMapReady
         map.getMapAsync(this);
 
         //Photos
-        tvPhotos = (TextView) findViewById(R.id.photos);
-        tvPhotos.setOnClickListener(new View.OnClickListener() {
+        imgBtnPhotos = (ImageButton) findViewById(R.id.photos);
+        imgBtnPhotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 try {
+
+                   if(!mFuture.isDone()) {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.downloading_photos), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     final HashMap<String, Bitmap> photos = mFuture.get();
+                    if(photos.size() == 0 && mFuture.isDone()) {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.no_photos), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     final Object[] keys = photos.keySet().toArray();
                     String first = keys[mPhotoIndex].toString();
@@ -189,13 +204,6 @@ public class PizzaDetailActivity extends AppCompatActivity implements OnMapReady
                         places.release();
                     }
                 });
-
-
-        //Photos: Callable is running on a background thread
-        mPool = Executors.newFixedThreadPool(1);
-        Callable<HashMap<String, Bitmap>> photosCallable = new PhotosCallable(mGoogleApiClient, idNumber);
-        mFuture = mPool.submit(photosCallable);
-
 
 
         //Create Ad

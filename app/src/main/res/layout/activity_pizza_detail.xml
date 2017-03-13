@@ -47,13 +47,6 @@
                         android:layout_width="wrap_content"
                         android:text="$$"/>
 
-                <TextView
-                        android:id="@+id/photos"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_marginLeft="50dp"
-                        android:textColor="#0000FF"
-                        android:text="Photos"/>
             </LinearLayout>
 
             <TextView android:id="@+id/location_phone"
@@ -69,6 +62,14 @@
                       android:layout_marginLeft="5dp"
                       android:text="web site"
                       android:autoLink="web"/>
+
+            <ImageButton
+                    android:id="@+id/photos"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="#0000FF"
+                    android:src="@mipmap/ic_photo_album_black_24dp"/>
 
         </LinearLayout>
 

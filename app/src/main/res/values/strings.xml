@@ -15,5 +15,7 @@
     <string name="warning_text">Warning</string>
     <string name="dialog_text">The radius must be a value between 1 and 50000.</string>
     <string name="location_images">Pizza Location Images</string>
+    <string name="downloading_photos">Downloading Photos…</string>
+    <string name="no_photos">No Photos Available</string>
 
 </resources>
