@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.brigus.pizzafinder2.SettingsActivity.DEFAULT_RADIUS_KEY;
-import static com.example.brigus.pizzafinder2.SettingsActivity.SHARED_PREFS_KEY;
-import static com.example.brigus.pizzafinder2.SettingsActivity.DEFAULT_RADIUS;
+import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.DEFAULT_RADIUS;
+import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.DEFAULT_RADIUS_KEY;
+import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.SHARED_PREFS_KEY;
 
 
 public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, ArrayList<PizzaLocation>> {
