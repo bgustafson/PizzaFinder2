@@ -58,7 +58,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         super.onCreate(savedInstanceState);
 
         mHeadlessSearchFragment = (GoogleSearchFragment) getFragmentManager()
-                .findFragmentByTag("counter_fragment");
+                .findFragmentByTag(GoogleSearchFragment.TAG);
         if(mHeadlessSearchFragment == null) {
             mHeadlessSearchFragment = new GoogleSearchFragment();
             mHeadlessSearchFragment.setDelegate(this);
