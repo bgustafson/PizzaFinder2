@@ -1,23 +1,25 @@
 package com.example.brigus.pizzafinder2.Model;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 
 public class PizzaLocation implements Parcelable {
 
     private String name;
+    @SerializedName("vicinity")
     private String address;
     private String rating;
     private String price_level;
+    @SerializedName("place_id")
     private String id;
     private String icon;
-    private Location location;
+    private android.location.Location location;
+    private Geometry geometry;
 
 
-
-    public PizzaLocation(String name, String address, String rating, String price_level, String id, Location location)
+    public PizzaLocation(String name, String address, String rating, String price_level, String id, android.location.Location location)
     {
         this.name = name;
         this.address = address;
@@ -38,7 +40,7 @@ public class PizzaLocation implements Parcelable {
         this.price_level = data[3];
         this.id = data[4];
 
-        Location l = new Location("");
+        android.location.Location l = new android.location.Location("");
 
         l.setLatitude(Double.parseDouble(data[5]));
         l.setLongitude(Double.parseDouble(data[6]));
@@ -93,11 +95,11 @@ public class PizzaLocation implements Parcelable {
         this.icon = icon;
     }
 
-    public Location getLocation() {
+    public android.location.Location getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(android.location.Location location) {
         this.location = location;
     }
 
@@ -129,4 +131,27 @@ public class PizzaLocation implements Parcelable {
             return new PizzaLocation[size];
         }
     };
+
+
+    class Geometry {
+
+        Location location;
+
+        public Location getLocation() {
+            return location;
+        }
+    }
+
+    class Location {
+        String lat;
+        String lng;
+
+        public String getLat() {
+            return lat;
+        }
+
+        public String getLng() {
+            return lng;
+        }
+    }
 }

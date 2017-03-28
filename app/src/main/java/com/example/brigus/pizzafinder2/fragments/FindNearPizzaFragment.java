@@ -46,6 +46,8 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     private RecyclerView mRecyclerView;
     private LinearLayout progressBarContainer;
 
+    private GoogleSearchFragment mHeadlessSearchFragment;
+
 
     public static FindNearPizzaFragment newInstance() {
         return new FindNearPizzaFragment();
@@ -54,6 +56,15 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mHeadlessSearchFragment = (GoogleSearchFragment) getFragmentManager()
+                .findFragmentByTag("counter_fragment");
+        if(mHeadlessSearchFragment == null) {
+            mHeadlessSearchFragment = new GoogleSearchFragment();
+            mHeadlessSearchFragment.setDelegate(this);
+            getFragmentManager().beginTransaction().add(mHeadlessSearchFragment, GoogleSearchFragment.TAG)
+                    .commit();
+        }
     }
 
     @Override
@@ -113,7 +124,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 mLocation = mLocationManager.getLastKnownLocation(provider);
             }
 
-            new GoogleNearbySearchTask(this).execute(mLocation);
+            mHeadlessSearchFragment.findNearby(mLocation);
             mLocationManager.requestLocationUpdates(provider, 60000, 1000, mLocationHelper);
         }
     }
@@ -133,7 +144,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
             case R.id.action_rerun:
                 mRecyclerView.setAdapter(null);
                 progressBarContainer.setVisibility(View.VISIBLE);
-                new GoogleNearbySearchTask(this).execute(mLocation);
+                mHeadlessSearchFragment.findNearby(mLocation);
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
@@ -166,7 +177,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         if(requestCode == SETTINGS_UPDATED && resultCode == RESULT_OK) {
             mRecyclerView.setAdapter(null);
             progressBarContainer.setVisibility(View.VISIBLE);
-            new GoogleNearbySearchTask(this).execute(mLocation);
+            mHeadlessSearchFragment.findNearby(mLocation);
         }
     }
 
@@ -208,6 +219,12 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         if (adView != null) {
             adView.destroy();
         }
+
+        if(mHeadlessSearchFragment != null) {
+            mHeadlessSearchFragment.setDelegate(null);
+            mHeadlessSearchFragment = null;
+        }
+
         super.onDestroy();
     }
 }
