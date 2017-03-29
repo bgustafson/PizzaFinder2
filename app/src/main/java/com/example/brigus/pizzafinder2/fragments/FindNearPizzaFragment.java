@@ -79,7 +79,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         progressBarContainer = (LinearLayout) view.findViewById(R.id.progressBarContainer);
         LinearLayout mainContainer = (LinearLayout) view.findViewById(R.id.parent_container);
 
-        mLocationHelper = new PizzaLocationListener(new GoogleNearbySearchTask(this));
+        mLocationHelper = new PizzaLocationListener(mHeadlessSearchFragment.getWrappedAsyncTask());
         mLocationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
         getLastLocation();
 

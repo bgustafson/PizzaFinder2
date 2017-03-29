@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import com.example.brigus.pizzafinder2.Model.PizzaLocation;
+import com.example.brigus.pizzafinder2.Model.Results;
 import com.example.brigus.pizzafinder2.utils.AppClass;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
 import com.example.brigus.pizzafinder2.utils.GoogleNearbySearchService;
@@ -24,13 +25,17 @@ import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.*;
 public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {//ArrayList<PizzaLocation>> {
 
 
-    private static final String BASE_URL = "https://maps.googleapis.com/maps/api";
+    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
     private static final String API_KEY = "AIzaSyDhIhAAThws366XlCyqtIAK-SfBGsctlJg";
 
     private AsyncResponse delegate = null;
     private ArrayList<PizzaLocation> locations;
 
     public GoogleNearbySearchTask(AsyncResponse delegate) {
+        this.delegate = delegate;
+    }
+
+    public void setDelegate(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
@@ -53,22 +58,23 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
                     .build();
 
             GoogleNearbySearchService service = retrofit.create(GoogleNearbySearchService.class);
-            Call<List<PizzaLocation>> call = service.listLocations(location[0].getLatitude() + "," + location[0].getLongitude(),
+            Call<Results> call = service.listLocations(location[0].getLatitude() + "," + location[0].getLongitude(),
                     searchRadius, "food", "pizza", "true", API_KEY);
 
-            call.enqueue(new Callback<List<PizzaLocation>>() {
+            call.enqueue(new Callback<Results>() {
                 @Override
-                public void onResponse(Call<List<PizzaLocation>> call, Response<List<PizzaLocation>> response) {
+                public void onResponse(Call<Results> call, Response<Results> response) {
 
                     // handle response here
-                    List<PizzaLocation> body = response.body();
-                    locations.addAll(body);
+                    Results body = response.body();
+                    locations.addAll(body.getResults());
                     delegate.processFinish(locations);
                 }
 
                 @Override
-                public void onFailure(Call<List<PizzaLocation>> call, Throwable throwable) {
+                public void onFailure(Call<Results> call, Throwable throwable) {
 
+                    delegate.processFinish(locations);
                 }
             });
 

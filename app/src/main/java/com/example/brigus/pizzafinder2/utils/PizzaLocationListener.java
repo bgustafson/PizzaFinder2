@@ -2,6 +2,7 @@ package com.example.brigus.pizzafinder2.utils;
 
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import com.example.brigus.pizzafinder2.Tasks.GoogleNearbySearchTask;
 
@@ -19,6 +20,8 @@ public class PizzaLocationListener implements LocationListener {
     public void onLocationChanged(Location location) {
 
         //get directions button
+        if(this.asyncTask.getStatus() == AsyncTask.Status.RUNNING) return;
+        if(this.asyncTask.getStatus() == AsyncTask.Status.FINISHED) return;
         this.asyncTask.execute(location);
     }
 

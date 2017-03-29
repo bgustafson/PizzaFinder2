@@ -117,8 +117,8 @@ public class PizzaLocation implements Parcelable {
                 this.rating,
                 this.price_level,
                 this.id,
-                String.valueOf(this.location.getLatitude()),
-                String.valueOf(this.location.getLongitude())
+                String.valueOf(this.geometry.location.getLat()),
+                String.valueOf(this.geometry.location.getLng())
         });
     }
 

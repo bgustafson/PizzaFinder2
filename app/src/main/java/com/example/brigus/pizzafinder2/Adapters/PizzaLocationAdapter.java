@@ -42,7 +42,15 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
         holder.name.setText(location.getName());
         holder.address.setText(location.getAddress());
         holder.rating.setText(location.getRating());
-        holder.price.setText(AppUtilityFunctions.convertPrice(Integer.parseInt(location.getPrice_level())));
+
+        int price;
+        try{
+            price = Integer.parseInt(location.getPrice_level());
+        } catch (NumberFormatException ex) {
+            price = -1;
+        }
+
+        holder.price.setText(AppUtilityFunctions.convertPrice(price));
     }
 
 

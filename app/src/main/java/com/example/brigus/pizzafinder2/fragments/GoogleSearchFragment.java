@@ -22,6 +22,7 @@ public class GoogleSearchFragment extends Fragment {
 
     public void setDelegate(AsyncResponse delegate){
         this.mDelegate = delegate;
+        mAsyncTask.setDelegate(delegate);
     }
 
     @Override
@@ -30,6 +31,11 @@ public class GoogleSearchFragment extends Fragment {
 
         //Will stick around even after a rotation
         setRetainInstance(true);
+    }
+
+    public GoogleNearbySearchTask getWrappedAsyncTask() {
+        
+        return mAsyncTask;
     }
 
 

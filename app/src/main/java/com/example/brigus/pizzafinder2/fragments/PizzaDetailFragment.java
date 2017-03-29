@@ -111,7 +111,13 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
 
         //Price
         tvPrice = (TextView) view.findViewById(R.id.location_price);
-        tvPrice.setText(AppUtilityFunctions.convertPrice(Integer.parseInt(location.getPrice_level())));
+        int price;
+        try{
+            price = Integer.parseInt(location.getPrice_level());
+        } catch (NumberFormatException ex) {
+            price = -1;
+        }
+        tvPrice.setText(AppUtilityFunctions.convertPrice(price));
 
         //Phone and WebSite
         tvPhone = (TextView) view.findViewById(R.id.location_phone);
