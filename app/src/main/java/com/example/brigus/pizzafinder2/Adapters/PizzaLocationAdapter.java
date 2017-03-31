@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.PizzaDetailActivity;
 import com.example.brigus.pizzafinder2.R;
@@ -62,18 +65,19 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
     public class PizzaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         
-        public TextView name, address, rating, price;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.address) TextView address;
+        @BindView(R.id.rating) TextView rating;
+        @BindView(R.id.price) TextView price;
 
         public PizzaViewHolder(View view) {
             super(view);
-            name = (TextView) view.findViewById(R.id.name);
-            address = (TextView) view.findViewById(R.id.address);
-            rating = (TextView) view.findViewById(R.id.rating);
-            price = (TextView) view.findViewById(R.id.price);
-            view.setOnClickListener(this);
+            ButterKnife.bind(this, view);
+            //view.setOnClickListener(this);
         }
 
         @Override
+        @OnClick(R.id.item_container)
         public void onClick(View v) {
 
             PizzaLocation selectedFromList = mData.get(this.getPosition());
@@ -85,5 +89,7 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
             mActivity.startActivity(i);
         }
+
+
     }
 }

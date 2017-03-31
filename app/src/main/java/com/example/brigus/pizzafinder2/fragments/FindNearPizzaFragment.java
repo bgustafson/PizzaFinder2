@@ -16,11 +16,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.LinearLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.example.brigus.pizzafinder2.Adapters.PizzaLocationAdapter;
 import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.R;
 import com.example.brigus.pizzafinder2.SettingsActivity;
-import com.example.brigus.pizzafinder2.Tasks.GoogleNearbySearchTask;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
 import com.example.brigus.pizzafinder2.utils.PizzaLocationListener;
 import com.google.android.gms.ads.AdRequest;
@@ -43,8 +45,9 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     private LocationManager mLocationManager;
     private PizzaLocationListener mLocationHelper;
     private Location mLocation;
-    private RecyclerView mRecyclerView;
-    private LinearLayout progressBarContainer;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.progressBarContainer) LinearLayout progressBarContainer;
+    private Unbinder mUnbinder;
 
     private GoogleSearchFragment mHeadlessSearchFragment;
 
@@ -72,12 +75,8 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_find_near_pizza, container, false);
-
         Activity activity = getActivity();
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        progressBarContainer = (LinearLayout) view.findViewById(R.id.progressBarContainer);
-        LinearLayout mainContainer = (LinearLayout) view.findViewById(R.id.parent_container);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mLocationHelper = new PizzaLocationListener(mHeadlessSearchFragment.getWrappedAsyncTask());
         mLocationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
@@ -94,6 +93,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 .addTestDevice(Test_Hashed_Device_ID);
 
 
+        LinearLayout mainContainer = (LinearLayout) view.findViewById(R.id.parent_container);
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.TOP);
@@ -189,11 +189,9 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         PizzaLocation[] array = output.toArray(new PizzaLocation[output.size()]);
 
         //build the ui
-        PizzaLocationAdapter adapter = new PizzaLocationAdapter(getActivity(), Arrays.asList(array));
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(new PizzaLocationAdapter(getActivity(), Arrays.asList(array)));
         progressBarContainer.setVisibility(View.INVISIBLE);
     }
 
@@ -226,5 +224,6 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         }
 
         super.onDestroy();
+        mUnbinder.unbind();
     }
 }

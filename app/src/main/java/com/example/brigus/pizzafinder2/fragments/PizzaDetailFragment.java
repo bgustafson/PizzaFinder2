@@ -12,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.R;
 import com.example.brigus.pizzafinder2.Tasks.PhotosCallable;
@@ -50,16 +54,23 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
     private static final String AD_Unit_ID = "ca-app-pub-3892677699343303/2379904475";
     private String Test_Hashed_Device_ID;
     private PizzaLocation location;
-    private TextView tvName, tvAddress, tvRating, tvPrice, tvPhone, tvWebSite;
-    ImageButton imgBtnPhotos;
-    private LinearLayout mainContainer;
     private String idNumber;
     private MapFragment map;
     private LatLng coordinates;
     private GoogleApiClient mGoogleApiClient;
-    ExecutorService mPool;
+    private ExecutorService mPool;
     private Future<HashMap<String, Bitmap>> mFuture;
     private int mPhotoIndex = 0;
+
+    @BindView(R.id.location_name) TextView tvName;
+    @BindView(R.id.location_address) TextView tvAddress;
+    @BindView(R.id.location_rating) TextView tvRating;
+    @BindView(R.id.location_price) TextView tvPrice;
+    @BindView(R.id.location_phone) TextView tvPhone;
+    @BindView(R.id.location_website) TextView tvWebSite;
+    @BindView(R.id.photos) ImageButton imgBtnPhotos;
+    @BindView(R.id.main_details_container) LinearLayout mainContainer;
+    private Unbinder mUnbinder;
 
 
     public static PizzaDetailFragment newInstance() {
@@ -77,6 +88,7 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_pizza_detail, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
@@ -86,7 +98,6 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        mainContainer = (LinearLayout) view.findViewById(R.id.main_details_container);
         location = getActivity().getIntent().getParcelableExtra("location");
         coordinates = new LatLng(location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
@@ -98,19 +109,15 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
         mFuture = mPool.submit(photosCallable);
 
         //Name
-        tvName = (TextView) view.findViewById(R.id.location_name);
         tvName.setText(location.getName());
 
         //Address
-        tvAddress = (TextView) view.findViewById(R.id.location_address);
         tvAddress.setText(location.getAddress());
 
         //Rating
-        tvRating = (TextView) view.findViewById(R.id.location_rating);
         tvRating.setText(location.getRating());
 
         //Price
-        tvPrice = (TextView) view.findViewById(R.id.location_price);
         int price;
         try{
             price = Integer.parseInt(location.getPrice_level());
@@ -119,92 +126,10 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
         }
         tvPrice.setText(AppUtilityFunctions.convertPrice(price));
 
-        //Phone and WebSite
-        tvPhone = (TextView) view.findViewById(R.id.location_phone);
-        tvWebSite = (TextView) view.findViewById(R.id.location_website);
-
         //Map
         map = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
-
-        //Photos
-        imgBtnPhotos = (ImageButton) view.findViewById(R.id.photos);
-        imgBtnPhotos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-
-                    if(!mFuture.isDone()) {
-                        Toast.makeText(getActivity(), getActivity().getString(R.string.downloading_photos), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    final HashMap<String, Bitmap> photos = mFuture.get();
-                    if(photos.size() == 0 && mFuture.isDone()) {
-                        Toast.makeText(getActivity(), getActivity().getString(R.string.no_photos), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    final Object[] keys = photos.keySet().toArray();
-                    String first = keys[mPhotoIndex].toString();
-                    Bitmap bitmap = photos.get(first);
-
-
-                    // custom dialog
-                    final Dialog dialog = new Dialog(getActivity());
-                    dialog.setContentView(R.layout.image_dialog);
-                    dialog.setTitle(R.string.location_images);
-
-                    // set the custom dialog components - text, image and button
-                    TextView text = (TextView) dialog.findViewById(R.id.attribution_text);
-                    text.setText(first);
-                    ImageView image = (ImageView) dialog.findViewById(R.id.image);
-                    image.setImageBitmap(bitmap);
-
-                    Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-                    // if button is clicked, close the custom dialog
-                    dialogButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    Button nextButton = (Button) dialog.findViewById(R.id.dialogButtonNext);
-                    // if button is clicked, close the custom dialog
-                    nextButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            mPhotoIndex++;
-
-                            if(mPhotoIndex > photos.size() - 1) {
-                                mPhotoIndex = 0;
-                            }
-
-                            final Object[] keys = photos.keySet().toArray();
-                            String key = keys[mPhotoIndex].toString();
-                            Bitmap bitmap = photos.get(key);
-
-                            // set the custom dialog components - text, image and button
-                            TextView text = (TextView) dialog.findViewById(R.id.attribution_text);
-                            text.setText(key);
-                            ImageView image = (ImageView) dialog.findViewById(R.id.image);
-                            image.setImageBitmap(bitmap);
-                        }
-                    });
-
-                    dialog.show();
-
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-
+        
         //Phone, Web Site,
         Places.GeoDataApi.getPlaceById(mGoogleApiClient, idNumber)
                 .setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -222,7 +147,6 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
                         places.release();
                     }
                 });
-
 
         //Create Ad
         Test_Hashed_Device_ID = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -249,6 +173,79 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
+    @OnClick(R.id.photos)
+    public void showPhotos() {
+        try {
+
+            if(!mFuture.isDone()) {
+                Toast.makeText(getActivity(), getActivity().getString(R.string.downloading_photos), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            final HashMap<String, Bitmap> photos = mFuture.get();
+            if(photos.size() == 0 && mFuture.isDone()) {
+                Toast.makeText(getActivity(), getActivity().getString(R.string.no_photos), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            final Object[] keys = photos.keySet().toArray();
+            String first = keys[mPhotoIndex].toString();
+            Bitmap bitmap = photos.get(first);
+
+
+            // custom dialog
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(R.layout.image_dialog);
+            dialog.setTitle(R.string.location_images);
+
+            // set the custom dialog components - text, image and button
+            TextView text = ButterKnife.findById(dialog, R.id.attribution_text);
+            text.setText(first);
+            ImageView image = ButterKnife.findById(dialog, R.id.image);
+            image.setImageBitmap(bitmap);
+
+            Button dialogButton = ButterKnife.findById(dialog, R.id.dialogButtonOK);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            Button nextButton = ButterKnife.findById(dialog, R.id.dialogButtonNext);
+            // if button is clicked, close the custom dialog
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mPhotoIndex++;
+
+                    if(mPhotoIndex > photos.size() - 1) {
+                        mPhotoIndex = 0;
+                    }
+
+                    final Object[] keys = photos.keySet().toArray();
+                    String key = keys[mPhotoIndex].toString();
+                    Bitmap bitmap = photos.get(key);
+
+                    // set the custom dialog components - text, image and button
+                    TextView text = ButterKnife.findById(dialog, R.id.attribution_text);
+                    text.setText(key);
+                    ImageView image = ButterKnife.findById(dialog, R.id.image);
+                    image.setImageBitmap(bitmap);
+                }
+            });
+
+            dialog.show();
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -263,6 +260,12 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
         super.onStop();
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import butterknife.BindView;
+import butterknife.OnClick;
 import com.example.brigus.pizzafinder2.R;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -23,8 +25,8 @@ public class SettingsFragment extends Fragment {
     public static String DEFAULT_RADIUS = "4000";
     public static String SHARED_PREFS_KEY = "com.example.brigus.pizzafinder2.sharedprefs";
     public static String DEFAULT_RADIUS_KEY = "com.example.brigus.pizzafinder2.defaultradiuskey";
-    private EditText mEditText;
-    private Button mSaveBtn;
+    @BindView(R.id.edittext) EditText mEditText;
+    @BindView(R.id.save_button) Button mSaveBtn;
 
 
     public static SettingsFragment newInstance() {
@@ -42,15 +44,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        mEditText = (EditText) view.findViewById(R.id.edittext);
-        mSaveBtn =  (Button) view.findViewById(R.id.save_button);
-        mSaveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToSharedPrefs();
-            }
-        });
 
         SharedPreferences preferences = getActivity().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
         String currentVal = preferences.getString(DEFAULT_RADIUS_KEY, DEFAULT_RADIUS);
@@ -76,6 +69,7 @@ public class SettingsFragment extends Fragment {
     }
 
 
+    @OnClick(R.id.save_button)
     private void saveToSharedPrefs() {
 
         String newVal = mEditText.getText().toString();
