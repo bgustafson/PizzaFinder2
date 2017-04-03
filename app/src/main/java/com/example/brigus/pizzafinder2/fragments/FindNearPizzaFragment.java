@@ -212,6 +212,12 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
+
+    @Override
     public void onDestroy() {
         // Destroy the AdView.
         if (adView != null) {
@@ -224,6 +230,5 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         }
 
         super.onDestroy();
-        mUnbinder.unbind();
     }
 }

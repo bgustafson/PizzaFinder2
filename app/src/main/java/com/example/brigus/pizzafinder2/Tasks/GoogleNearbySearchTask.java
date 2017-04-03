@@ -7,7 +7,6 @@ import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.Model.Results;
 import com.example.brigus.pizzafinder2.utils.AppClass;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
-import com.example.brigus.pizzafinder2.utils.GoogleNearbySearchService;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,7 +15,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.*;

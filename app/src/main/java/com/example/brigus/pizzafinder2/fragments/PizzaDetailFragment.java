@@ -260,11 +260,15 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
         super.onStop();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mUnbinder.unbind();
     }
 
     @Override

@@ -1,13 +1,9 @@
-package com.example.brigus.pizzafinder2.utils;
+package com.example.brigus.pizzafinder2.Tasks;
 
-
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.Model.Results;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-
-import java.util.List;
 
 public interface GoogleNearbySearchService {
 

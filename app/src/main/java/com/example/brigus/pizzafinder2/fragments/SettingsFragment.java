@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.example.brigus.pizzafinder2.R;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -27,6 +29,8 @@ public class SettingsFragment extends Fragment {
     public static String DEFAULT_RADIUS_KEY = "com.example.brigus.pizzafinder2.defaultradiuskey";
     @BindView(R.id.edittext) EditText mEditText;
     @BindView(R.id.save_button) Button mSaveBtn;
+
+    private Unbinder mUnbinder;
 
 
     public static SettingsFragment newInstance() {
@@ -44,6 +48,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
+
 
         SharedPreferences preferences = getActivity().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
         String currentVal = preferences.getString(DEFAULT_RADIUS_KEY, DEFAULT_RADIUS);
@@ -105,4 +111,10 @@ public class SettingsFragment extends Fragment {
         return !(val.equals("") || Integer.valueOf(val) > 50000);
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 }
