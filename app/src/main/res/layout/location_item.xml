@@ -7,49 +7,70 @@
               android:layout_height="wrap_content"
               android:id="@+id/item_container">
 
-	<ImageView android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:layout_marginRight="5dp"
-           android:src="@drawable/pizza_slice"/>
 
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_marginTop="5dp">
-
-        <TextView android:id="@+id/name"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:textColor="#FFFFFF"
-                tools:text="Rosati's"/>
-
-        <TextView android:id="@+id/address"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:textColor="#FFFFFF"
-                  tools:text="123 fake st"/>
+    <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view_listitem"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@android:style/Theme.Material"
+            android:elevation="20dp"
+            android:translationZ="15dp"
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="10dp">
 
         <LinearLayout android:orientation="horizontal"
                       android:layout_width="match_parent"
-                      android:layout_height="match_parent">
+                      android:layout_height="wrap_content">
 
-            <TextView android:id="@+id/rating"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginRight="8dp" tools:text="3"/>
+            <ImageView android:layout_height="wrap_content"
+                       android:layout_width="wrap_content"
+                       android:layout_marginLeft="5dp"
+                       android:layout_marginRight="15dp"
+                       android:src="@drawable/pizza_slice"/>
 
-            <TextView android:id="@+id/price"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:textColor="#FFFFFF"
-                    tools:text="$$"/>
+
+            <LinearLayout android:orientation="vertical"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:layout_marginTop="5dp">
+
+                <TextView android:id="@+id/name"
+                          android:layout_height="wrap_content"
+                          android:layout_width="wrap_content"
+                          android:textColor="#FFFFFF"
+                          tools:text="Rosati's"/>
+
+                <TextView android:id="@+id/address"
+                          android:layout_height="wrap_content"
+                          android:layout_width="wrap_content"
+                          android:textColor="#FFFFFF"
+                          tools:text="123 fake st"/>
+
+                <LinearLayout android:orientation="horizontal"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent">
+
+                    <TextView android:id="@+id/rating"
+                              android:layout_height="wrap_content"
+                              android:layout_width="wrap_content"
+                              android:textColor="#FFFFFF"
+                              android:layout_marginRight="8dp" tools:text="3"/>
+
+                    <TextView android:id="@+id/price"
+                              android:layout_height="wrap_content"
+                              android:layout_width="wrap_content"
+                              android:textColor="#FFFFFF"
+                              tools:text="$$"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
-    </LinearLayout>
 
 
-	<!-- An image on the left and then the name, address, rating and price.  The last two on the same line.
-         Swiping on one of these should open the details view
-         http://developer.android.com/design/patterns/multi-pane-layouts.html -->
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

@@ -76,7 +76,7 @@ public class SettingsFragment extends Fragment {
 
 
     @OnClick(R.id.save_button)
-    private void saveToSharedPrefs() {
+    public void saveToSharedPrefs() {
 
         String newVal = mEditText.getText().toString();
 

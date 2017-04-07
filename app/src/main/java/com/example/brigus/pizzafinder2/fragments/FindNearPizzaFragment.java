@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,11 +31,11 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.brigus.pizzafinder2.utils.PermissionsManager.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.brigus.pizzafinder2.utils.PermissionsManager.checkForPermissions;
+
 
 public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
@@ -47,9 +48,11 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     private Location mLocation;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.progressBarContainer) LinearLayout progressBarContainer;
+    @BindView(R.id.about_fab) FloatingActionButton mAboutFAB;
     private Unbinder mUnbinder;
 
     private GoogleSearchFragment mHeadlessSearchFragment;
+    private AboutFragment mAboutFragment;
 
 
     public static FindNearPizzaFragment newInstance() {
@@ -103,6 +106,18 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
         // Start loading the ad in the background.
         adView.loadAd(adRequestBuilder.build());
+
+        mAboutFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAboutFragment = (AboutFragment) getFragmentManager()
+                        .findFragmentByTag(AboutFragment.TAG);
+                if(mAboutFragment == null) {
+                    mAboutFragment = AboutFragment.newInstance();
+                    mAboutFragment.show(getFragmentManager(), AboutFragment.TAG);
+                }
+            }
+        });
 
         return view;
     }
@@ -186,13 +201,14 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     @Override
     public void processFinish(ArrayList<PizzaLocation> output) {
 
-        PizzaLocation[] array = output.toArray(new PizzaLocation[output.size()]);
+        PizzaLocationAdapter locationAdapter = new PizzaLocationAdapter(getActivity(), output);
+        locationAdapter.getItemTouchHelper().attachToRecyclerView(mRecyclerView);
 
         //build the ui
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(new PizzaLocationAdapter(getActivity(), Arrays.asList(array)));
-        progressBarContainer.setVisibility(View.INVISIBLE);
+        mRecyclerView.setAdapter(locationAdapter);
+        progressBarContainer.setVisibility(View.GONE);
     }
 
 

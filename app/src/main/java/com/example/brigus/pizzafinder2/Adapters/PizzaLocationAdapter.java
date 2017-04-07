@@ -3,10 +3,12 @@ package com.example.brigus.pizzafinder2.Adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,10 +24,14 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
     private final Activity mActivity;
     private final List<PizzaLocation> mData;
+    private final ItemTouchHelper mItemTouchHelper;
+    private final PizzaLocationAdapter mAdapter;
 
     public PizzaLocationAdapter(Activity activity, List<PizzaLocation> data) {
         this.mData = data;
         this.mActivity = activity;
+        mAdapter = this;
+        mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
     }
 
 
@@ -63,6 +69,11 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
     }
 
 
+    public ItemTouchHelper getItemTouchHelper() {
+        return mItemTouchHelper;
+    }
+
+
     public class PizzaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         
         @BindView(R.id.name) TextView name;
@@ -92,4 +103,26 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
 
     }
+
+
+    private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            Toast.makeText(mActivity, "on Move", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            final int position = viewHolder.getAdapterPosition();
+
+            if(direction == ItemTouchHelper.LEFT) {
+                //Remove swiped item from list and notify the RecyclerView
+                mAdapter.notifyItemRemoved(position);
+                mData.remove(position);
+                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+            }
+        }
+    };
 }

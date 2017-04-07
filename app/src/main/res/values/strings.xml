@@ -4,7 +4,7 @@
     <string name="loading">Loading…</string>
     <string name="progressDefaultText">Finding Your Location…</string>
     <string name="nearest_places">This list displays the nearest pizza to your current location.</string>
-    <string name="ratingLBL">Rating: </string>
+    <string name="ratingLBL">Rating:</string>
     <string name="settings">Settings</string>
     <string name="reload">Reload</string>
     <string name="save">Save</string>
@@ -17,5 +17,9 @@
     <string name="location_images">Pizza Location Images</string>
     <string name="downloading_photos">Downloading Photos…</string>
     <string name="no_photos">No Photos Available</string>
+
+    <string name="about_text">This is a sample application that uses Multi-Threading(AsyncTasks and Callables and Executer pools), Fragments, Material Design and Support Libraries.  This app also uses the following libraries.  Butterknife, Retrofit, GSON, OKHttp, Google Maps, Google Ads and Google Places.</string>
+    <string name="about_header">About Pizza Finder App</string>
+    <string name="about_dismiss">Dismiss</string>
 
 </resources>

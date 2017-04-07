@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.example.brigus.pizzafinder2.fragments.AboutFragment"
+             android:background="@color/cardview_dark_background">
+
+    <TextView android:textAlignment="center"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="25dp"
+              android:textColor="#FFFFFF"
+              android:text="@string/about_header"/>
+
+
+    <TextView style="@style/AboutHeaderText"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:text="@string/about_text"/>
+
+    <ImageButton android:id="@+id/dismiss_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:src="@drawable/places_ic_clear"
+            android:contentDescription="@string/about_dismiss"
+            android:layout_margin="25dp"/>
+
+</FrameLayout>
