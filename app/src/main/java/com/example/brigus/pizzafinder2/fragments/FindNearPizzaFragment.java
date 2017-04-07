@@ -31,6 +31,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.brigus.pizzafinder2.utils.PermissionsManager.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
@@ -199,16 +200,21 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
     //update list.  This is the delegate method called from the async task and set on the task before it is run
     @Override
-    public void processFinish(ArrayList<PizzaLocation> output) {
+    public void processFinish(List<?> output) {
 
-        PizzaLocationAdapter locationAdapter = new PizzaLocationAdapter(getActivity(), output);
-        locationAdapter.getItemTouchHelper().attachToRecyclerView(mRecyclerView);
+        if(output != null && !output.isEmpty()) {
+            if (output.get(0) instanceof PizzaLocation) {
 
-        //build the ui
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(locationAdapter);
-        progressBarContainer.setVisibility(View.GONE);
+                PizzaLocationAdapter locationAdapter = new PizzaLocationAdapter(getActivity(), (List<PizzaLocation>) output);
+                locationAdapter.getItemTouchHelper().attachToRecyclerView(mRecyclerView);
+
+                //build the ui
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.setAdapter(locationAdapter);
+                progressBarContainer.setVisibility(View.GONE);
+            }
+        }
     }
 
 

@@ -1,11 +1,8 @@
 package com.example.brigus.pizzafinder2.utils;
 
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
-
-import java.util.ArrayList;
-
+import java.util.List;
 
 public interface AsyncResponse {
 
-    void processFinish(ArrayList<PizzaLocation> output);
+    void processFinish(List<?> output);
 }
