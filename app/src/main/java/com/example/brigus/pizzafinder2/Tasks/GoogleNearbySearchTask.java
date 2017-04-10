@@ -39,6 +39,13 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
 
     protected Void doInBackground(final Location... location) {
         locations = new ArrayList<>();
+
+        if (location == null){
+
+            delegate.processFinish(locations);
+            return null;
+        }
+
         location[0].getLatitude();
         location[0].getLongitude();
         //HttpClient httpclient = new DefaultHttpClient();

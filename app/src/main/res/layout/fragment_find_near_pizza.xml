@@ -30,9 +30,11 @@
                 android:layout_marginTop="3dp"/>
     </LinearLayout>
 
-    <android.support.design.widget.CoordinatorLayout android:layout_width="fill_parent"
-                                                     android:layout_height="fill_parent"
-                                                     android:fitsSystemWindows="true">
+    <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/find_cord_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fitsSystemWindows="true">
 
         <LinearLayout android:layout_width="fill_parent"
                       android:layout_height="fill_parent"

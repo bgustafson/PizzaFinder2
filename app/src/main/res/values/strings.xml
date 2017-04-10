@@ -22,4 +22,5 @@
     <string name="about_header">About Pizza Finder App</string>
     <string name="about_dismiss">Dismiss</string>
 
+    <string name="no_locations">No Pizza Locations Found!</string>
 </resources>

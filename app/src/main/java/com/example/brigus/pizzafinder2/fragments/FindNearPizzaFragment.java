@@ -10,7 +10,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +32,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -50,6 +51,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.progressBarContainer) LinearLayout progressBarContainer;
     @BindView(R.id.about_fab) FloatingActionButton mAboutFAB;
+    @BindView(R.id.find_cord_layout) CoordinatorLayout mCoordinatorLayout;
     private Unbinder mUnbinder;
 
     private GoogleSearchFragment mHeadlessSearchFragment;
@@ -214,6 +216,10 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 mRecyclerView.setAdapter(locationAdapter);
                 progressBarContainer.setVisibility(View.GONE);
             }
+        } else {
+            progressBarContainer.setVisibility(View.GONE);
+            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.no_locations, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
         }
     }
 
