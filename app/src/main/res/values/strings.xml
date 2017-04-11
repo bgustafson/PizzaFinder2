@@ -18,7 +18,7 @@
     <string name="downloading_photos">Downloading Photos…</string>
     <string name="no_photos">No Photos Available</string>
 
-    <string name="about_text">This is a sample application that uses Multi-Threading(AsyncTasks and Callables and Executer pools), Fragments, Material Design and Support Libraries.  This app also uses the following libraries.  Butterknife, Retrofit, GSON, OKHttp, Google Maps, Google Ads and Google Places.</string>
+    <string name="about_text">This is a sample application that uses Multi-Threading(AsyncTasks and Callables with an Executer pool), Fragments, Material Design and Support Libraries.  The RecyclerView allows the removal of rows.  This app also uses the following libraries.  Butterknife, Retrofit, GSON, Picasso, OKHttp, Google Maps, Google Ads and Google Places.</string>
     <string name="about_header">About Pizza Finder App</string>
     <string name="about_dismiss">Dismiss</string>
 

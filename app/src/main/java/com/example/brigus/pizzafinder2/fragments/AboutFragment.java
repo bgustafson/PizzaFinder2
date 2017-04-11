@@ -7,17 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.example.brigus.pizzafinder2.R;
+import com.squareup.picasso.Picasso;
 
 public class AboutFragment extends DialogFragment {
 
     public static String TAG = "About Fragment";
 
     @BindView(R.id.dismiss_about) ImageButton mDismissButton;
+    @BindView(R.id.avatar) ImageView avatarImage;
     private Unbinder mUnbinder;
 
     public AboutFragment() {
@@ -37,6 +40,11 @@ public class AboutFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         getDialog().setCanceledOnTouchOutside(false);
+
+        Picasso.with(getContext())
+                .load("https://avatars1.githubusercontent.com/u/4312256?v=3")
+                .into(avatarImage);
+
         return view;
     }
 

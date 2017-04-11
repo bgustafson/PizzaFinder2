@@ -32,7 +32,7 @@ public class PhotosCallable implements Callable, GoogleApiClient.OnConnectionFai
     @Override
     public HashMap<String, Bitmap> call() throws Exception {
 
-        HashMap<String, Bitmap> photos = new HashMap();
+        HashMap<String, Bitmap> photos = new HashMap<>();
 
         final PlacePhotoMetadataResult result = Places.GeoDataApi.getPlacePhotos(mGoogleApiClient, idNumber).await();
 
