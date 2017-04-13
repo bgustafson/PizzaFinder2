@@ -36,9 +36,10 @@
             android:layout_height="fill_parent"
             android:fitsSystemWindows="true">
 
-        <LinearLayout android:layout_width="fill_parent"
-                      android:layout_height="fill_parent"
-                      android:orientation="vertical">
+        <LinearLayout android:id="@+id/cord_layout_contents"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
 
             <TextView
                     android:layout_width="match_parent"

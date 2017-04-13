@@ -1,10 +1,6 @@
 package com.example.brigus.pizzafinder2.utils;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 
 public class PermissionsManager {
@@ -12,7 +8,7 @@ public class PermissionsManager {
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 99;
 
 
-    public static boolean checkForPermissions(Activity activity, String permission, int requestReturnCode) {
+    /*public static boolean checkForPermissions(Activity activity, String permission, int requestReturnCode) {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(activity, permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -42,5 +38,10 @@ public class PermissionsManager {
         } else {
             return true;
         }
+    }*/
+
+
+    public static boolean hasPermission(Activity activity, String permission) {
+        return activity.checkSelfPermission(permission) == 0;
     }
 }

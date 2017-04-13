@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.LinearLayout;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -27,31 +29,33 @@ import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.R;
 import com.example.brigus.pizzafinder2.SettingsActivity;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
+import com.example.brigus.pizzafinder2.utils.PermissionsManager;
 import com.example.brigus.pizzafinder2.utils.PizzaLocationListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.brigus.pizzafinder2.utils.PermissionsManager.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.example.brigus.pizzafinder2.utils.PermissionsManager.checkForPermissions;
 
 
 public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
     private int SETTINGS_UPDATED = 100;
     private AdView adView;
-    private static final String AD_Unit_ID = "ca-app-pub-3892677699343303/2379904475";
+    @BindString(R.string.ad_unit_id) String AD_Unit_ID;
     private String Test_Hashed_Device_ID;
     private LocationManager mLocationManager;
     private PizzaLocationListener mLocationHelper;
     private Location mLocation;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.progressBarContainer) LinearLayout progressBarContainer;
+    @BindView(R.id.progressBarContainer) LinearLayout mProgressBarContainer;
     @BindView(R.id.about_fab) FloatingActionButton mAboutFAB;
     @BindView(R.id.find_cord_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.cord_layout_contents) LinearLayout mCordLayoutContents;
     private Unbinder mUnbinder;
 
     private GoogleSearchFragment mHeadlessSearchFragment;
@@ -85,11 +89,11 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         mUnbinder = ButterKnife.bind(this, view);
 
         mLocationHelper = new PizzaLocationListener(mHeadlessSearchFragment.getWrappedAsyncTask());
-        mLocationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) activity.getSystemService(Activity.LOCATION_SERVICE);
         getLastLocation();
 
         //Create Ad
-        Test_Hashed_Device_ID = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Test_Hashed_Device_ID = new AdvertisingIdClient.Info(AD_Unit_ID, false).getId();
         adView = new AdView(activity);
         adView.setAdSize(AdSize.SMART_BANNER);
         adView.setAdUnitId(AD_Unit_ID);
@@ -99,12 +103,11 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 .addTestDevice(Test_Hashed_Device_ID);
 
 
-        LinearLayout mainContainer = (LinearLayout) view.findViewById(R.id.parent_container);
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.TOP);
         linearLayout.addView(adView);
-        mainContainer.addView(linearLayout, 0);
+        mCordLayoutContents.addView(linearLayout, 0);
 
 
         // Start loading the ad in the background.
@@ -130,7 +133,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         boolean gps_enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean network_enabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        boolean hasPermission = checkForPermissions(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        boolean hasPermission = PermissionsManager.hasPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         if(hasPermission) {
             String provider;
@@ -144,6 +147,8 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
             mHeadlessSearchFragment.findNearby(mLocation);
             mLocationManager.requestLocationUpdates(provider, 60000, 1000, mLocationHelper);
+        } else {
+            this.requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
@@ -161,8 +166,8 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         switch (item.getItemId()) {
             case R.id.action_rerun:
                 mRecyclerView.setAdapter(null);
-                progressBarContainer.setVisibility(View.VISIBLE);
-                mHeadlessSearchFragment.findNearby(mLocation);
+                mProgressBarContainer.setVisibility(View.VISIBLE);
+                getLastLocation();
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
@@ -173,8 +178,10 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
     }
 
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
@@ -182,6 +189,20 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                     getLastLocation();
                 } else {
 
+                    mProgressBarContainer.setVisibility(View.GONE);
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.permission_error), Snackbar.LENGTH_INDEFINITE)
+                            .setAction(getString(R.string.settings), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                            Uri.parse("package:" + getActivity().getPackageName()));
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+
+                    snackbar.show();
                 }
                 break;
         }
@@ -194,7 +215,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
         if(requestCode == SETTINGS_UPDATED && resultCode == RESULT_OK) {
             mRecyclerView.setAdapter(null);
-            progressBarContainer.setVisibility(View.VISIBLE);
+            mProgressBarContainer.setVisibility(View.VISIBLE);
             mHeadlessSearchFragment.findNearby(mLocation);
         }
     }
@@ -214,10 +235,10 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
                 mRecyclerView.setAdapter(locationAdapter);
-                progressBarContainer.setVisibility(View.GONE);
+                mProgressBarContainer.setVisibility(View.GONE);
             }
         } else {
-            progressBarContainer.setVisibility(View.GONE);
+            mProgressBarContainer.setVisibility(View.GONE);
             Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.no_locations, Snackbar.LENGTH_INDEFINITE);
             snackbar.show();
         }

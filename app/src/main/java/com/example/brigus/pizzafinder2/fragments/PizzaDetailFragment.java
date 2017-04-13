@@ -1,5 +1,6 @@
 package com.example.brigus.pizzafinder2.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,17 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
+import butterknife.*;
 import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.R;
 import com.example.brigus.pizzafinder2.Tasks.PhotosCallable;
 import com.example.brigus.pizzafinder2.utils.AppUtilityFunctions;
+import com.example.brigus.pizzafinder2.utils.PermissionsManager;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -44,14 +44,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static com.example.brigus.pizzafinder2.utils.PermissionsManager.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.example.brigus.pizzafinder2.utils.PermissionsManager.checkForPermissions;
 
 
 public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private String TAG = "PIZZA_DETAIL_ACTIVITY";
     private AdView adView;
-    private static final String AD_Unit_ID = "ca-app-pub-3892677699343303/2379904475";
+    @BindString(R.string.ad_unit_id) String AD_Unit_ID;
     private String Test_Hashed_Device_ID;
     private PizzaLocation location;
     private String idNumber;
@@ -149,7 +148,7 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
                 });
 
         //Create Ad
-        Test_Hashed_Device_ID = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        Test_Hashed_Device_ID = new AdvertisingIdClient.Info(AD_Unit_ID, false).getId();
         adView = new AdView(getActivity());
         adView.setAdSize(AdSize.SMART_BANNER);
         adView.setAdUnitId(AD_Unit_ID);
@@ -284,12 +283,14 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
         Marker marker = googleMap.addMarker(markerOptions);
         marker.showInfoWindow();
 
-        boolean hasPermission = checkForPermissions(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        boolean hasPermission = PermissionsManager.hasPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         if(hasPermission) {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        } else {
+            this.requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
