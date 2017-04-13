@@ -15,8 +15,18 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+        }
+    }
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('build.properties').newDataInputStream())
+            keyPassword = properties.getProperty('key.store.password')
+            storePassword = properties.getProperty('key.store.password')
+            storeFile project.rootProject.file('android_keystore')
+            keyAlias 'PizzaFinder2'
         }
     }
 }
@@ -37,10 +47,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:10.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    testCompile 'junit:junit:4.12'
 }

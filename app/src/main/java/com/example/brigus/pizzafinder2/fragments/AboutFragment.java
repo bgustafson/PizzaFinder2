@@ -3,11 +3,13 @@ package com.example.brigus.pizzafinder2.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,7 +22,8 @@ public class AboutFragment extends DialogFragment {
     public static String TAG = "About Fragment";
 
     @BindView(R.id.dismiss_about) ImageButton mDismissButton;
-    @BindView(R.id.avatar) ImageView avatarImage;
+    @BindView(R.id.avatar) ImageView mAvatarImage;
+    @BindView(R.id.about_text) TextView mAboutTextView;
     private Unbinder mUnbinder;
 
     public AboutFragment() {
@@ -43,7 +46,9 @@ public class AboutFragment extends DialogFragment {
 
         Picasso.with(getContext())
                 .load("https://avatars1.githubusercontent.com/u/4312256?v=3")
-                .into(avatarImage);
+                .into(mAvatarImage);
+
+        mAboutTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
     }

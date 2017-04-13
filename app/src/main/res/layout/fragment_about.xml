@@ -24,7 +24,8 @@
                    android:layout_gravity="center"
                    app:srcCompat="@drawable/pizza_slice"/>
 
-        <TextView style="@style/AboutHeaderText"
+        <TextView android:id="@+id/about_text"
+                  style="@style/AboutHeaderText"
                   android:textAlignment="center"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
