@@ -1,10 +1,10 @@
-package com.example.brigus.pizzafinder2.Tasks;
+package com.example.brigus.pizzafinder2.tasks;
 
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
-import com.example.brigus.pizzafinder2.Model.Results;
+import com.example.brigus.pizzafinder2.model.PizzaLocation;
+import com.example.brigus.pizzafinder2.model.Results;
 import com.example.brigus.pizzafinder2.utils.AppClass;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
 import okhttp3.OkHttpClient;
@@ -21,7 +21,6 @@ import static com.example.brigus.pizzafinder2.fragments.SettingsFragment.*;
 
 
 public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {//ArrayList<PizzaLocation>> {
-
 
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
     private static final String API_KEY = "AIzaSyDhIhAAThws366XlCyqtIAK-SfBGsctlJg";
@@ -40,14 +39,12 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
     protected Void doInBackground(final Location... location) {
         locations = new ArrayList<>();
 
-        if (location == null){
+        if (location[0] == null){
 
             delegate.processFinish(locations);
             return null;
         }
 
-        location[0].getLatitude();
-        location[0].getLongitude();
         //HttpClient httpclient = new DefaultHttpClient();
         OkHttpClient client = new OkHttpClient();
 

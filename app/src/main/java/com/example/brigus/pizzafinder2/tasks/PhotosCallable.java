@@ -1,4 +1,4 @@
-package com.example.brigus.pizzafinder2.Tasks;
+package com.example.brigus.pizzafinder2.tasks;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;

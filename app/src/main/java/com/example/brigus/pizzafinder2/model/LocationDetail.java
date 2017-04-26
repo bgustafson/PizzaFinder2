@@ -1,4 +1,4 @@
-package com.example.brigus.pizzafinder2.Model;
+package com.example.brigus.pizzafinder2.model;
 
 import android.media.Image;
 import java.util.ArrayList;

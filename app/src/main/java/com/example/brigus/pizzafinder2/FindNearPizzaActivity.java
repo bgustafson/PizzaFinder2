@@ -6,6 +6,8 @@ import com.example.brigus.pizzafinder2.fragments.FindNearPizzaFragment;
 
 public class FindNearPizzaActivity extends SingleFragmentActivity {
 
+    //TODO: Implement MVP
+
     @Override
     protected Fragment createFragment() {
         return FindNearPizzaFragment.newInstance();

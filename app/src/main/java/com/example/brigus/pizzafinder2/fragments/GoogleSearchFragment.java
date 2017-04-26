@@ -1,11 +1,10 @@
 package com.example.brigus.pizzafinder2.fragments;
 
-
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.example.brigus.pizzafinder2.Tasks.GoogleNearbySearchTask;
+import com.example.brigus.pizzafinder2.tasks.GoogleNearbySearchTask;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
 
 public class GoogleSearchFragment extends Fragment {

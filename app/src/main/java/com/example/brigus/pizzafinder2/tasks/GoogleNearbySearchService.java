@@ -1,6 +1,6 @@
-package com.example.brigus.pizzafinder2.Tasks;
+package com.example.brigus.pizzafinder2.tasks;
 
-import com.example.brigus.pizzafinder2.Model.Results;
+import com.example.brigus.pizzafinder2.model.Results;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

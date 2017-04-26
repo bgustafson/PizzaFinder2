@@ -4,7 +4,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.example.brigus.pizzafinder2.Tasks.GoogleNearbySearchTask;
+import com.example.brigus.pizzafinder2.tasks.GoogleNearbySearchTask;
 
 
 public class PizzaLocationListener implements LocationListener {

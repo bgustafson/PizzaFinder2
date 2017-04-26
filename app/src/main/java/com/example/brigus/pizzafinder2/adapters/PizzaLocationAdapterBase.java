@@ -1,4 +1,5 @@
-package com.example.brigus.pizzafinder2.Adapters;
+package com.example.brigus.pizzafinder2.adapters;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,44 +9,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
 import com.example.brigus.pizzafinder2.PizzaDetailActivity;
 import com.example.brigus.pizzafinder2.R;
+import com.example.brigus.pizzafinder2.model.PizzaLocation;
 import com.example.brigus.pizzafinder2.utils.AppUtilityFunctions;
 
 import java.util.List;
 
+public abstract class PizzaLocationAdapterBase extends RecyclerView.Adapter<PizzaLocationAdapterBase.PizzaViewHolder> {
 
-public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdapter.PizzaViewHolder> {
-
-    private final Activity mActivity;
-    private final List<PizzaLocation> mData;
+    protected Activity mActivity;
+    protected final List<PizzaLocation> mData;
     private final ItemTouchHelper mItemTouchHelper;
-    private final PizzaLocationAdapter mAdapter;
+    protected final PizzaLocationAdapterBase mAdapter;
 
-    public PizzaLocationAdapter(Activity activity, List<PizzaLocation> data) {
+    abstract ItemTouchHelper.SimpleCallback buildTouchCallback();
+
+    public PizzaLocationAdapterBase(Activity activity, List<PizzaLocation> data) {
         this.mData = data;
         this.mActivity = activity;
         mAdapter = this;
-        mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        mItemTouchHelper = new ItemTouchHelper(buildTouchCallback());
     }
 
 
     @Override
-    public PizzaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PizzaLocationAdapterBase.PizzaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.location_item, parent, false);
 
-        return new PizzaViewHolder(itemView);
+        return new PizzaLocationAdapterBase.PizzaViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(PizzaViewHolder holder, int position) {
+    public void onBindViewHolder(PizzaLocationAdapterBase.PizzaViewHolder holder, int position) {
 
         PizzaLocation location = mData.get(position);
         holder.name.setText(location.getName());
@@ -75,8 +76,9 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
 
     public class PizzaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        
-        @BindView(R.id.name) TextView name;
+
+        @BindView(R.id.name)
+        TextView name;
         @BindView(R.id.address) TextView address;
         @BindView(R.id.rating) TextView rating;
         @BindView(R.id.price) TextView price;
@@ -100,29 +102,6 @@ public class PizzaLocationAdapter extends RecyclerView.Adapter<PizzaLocationAdap
 
             mActivity.startActivity(i);
         }
-
-
     }
 
-
-    private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            Toast.makeText(mActivity, "on Move", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-            final int position = viewHolder.getAdapterPosition();
-
-            if(direction == ItemTouchHelper.LEFT) {
-                //Remove swiped item from list and notify the RecyclerView
-                mAdapter.notifyItemRemoved(position);
-                mData.remove(position);
-                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
-            }
-        }
-    };
 }

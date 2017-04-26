@@ -20,14 +20,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.LinearLayout;
-import butterknife.BindString;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import com.example.brigus.pizzafinder2.Adapters.PizzaLocationAdapter;
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
+import butterknife.*;
+import com.example.brigus.pizzafinder2.FavoritesActivity;
 import com.example.brigus.pizzafinder2.R;
 import com.example.brigus.pizzafinder2.SettingsActivity;
+import com.example.brigus.pizzafinder2.adapters.PizzaLocationAdapterAdd;
+import com.example.brigus.pizzafinder2.model.PizzaLocation;
 import com.example.brigus.pizzafinder2.utils.AsyncResponse;
 import com.example.brigus.pizzafinder2.utils.PermissionsManager;
 import com.example.brigus.pizzafinder2.utils.PizzaLocationListener;
@@ -103,7 +101,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 .addTestDevice(Test_Hashed_Device_ID);
 
 
-        LinearLayout linearLayout = new LinearLayout(getActivity());
+        LinearLayout linearLayout = new LinearLayout(activity);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.TOP);
         linearLayout.addView(adView);
@@ -163,6 +161,9 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent;
+
         switch (item.getItemId()) {
             case R.id.action_rerun:
                 mRecyclerView.setAdapter(null);
@@ -170,8 +171,12 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
                 getLastLocation();
                 break;
             case R.id.action_settings:
-                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                intent = new Intent(getActivity(), SettingsActivity.class);
                 startActivityForResult(intent, SETTINGS_UPDATED);
+                break;
+            case R.id.action_favorites:
+                intent = new Intent(getActivity(), FavoritesActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;
@@ -228,7 +233,7 @@ public class FindNearPizzaFragment extends Fragment implements AsyncResponse {
         if(output != null && !output.isEmpty()) {
             if (output.get(0) instanceof PizzaLocation) {
 
-                PizzaLocationAdapter locationAdapter = new PizzaLocationAdapter(getActivity(), (List<PizzaLocation>) output);
+                PizzaLocationAdapterAdd locationAdapter = new PizzaLocationAdapterAdd(getActivity(), (List<PizzaLocation>) output);
                 locationAdapter.getItemTouchHelper().attachToRecyclerView(mRecyclerView);
 
                 //build the ui

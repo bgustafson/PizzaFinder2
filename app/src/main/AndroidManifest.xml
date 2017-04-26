@@ -36,8 +36,15 @@
                 android:name=".PizzaDetailActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
-        <activity android:name=".SettingsActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+                android:name=".SettingsActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".FavoritesActivity" android:label="@string/back"
+                  android:parentActivityName="com.example.brigus.pizzafinder2.FindNearPizzaActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.example.brigus.pizzafinder2.FindNearPizzaActivity" />
         </activity>
     </application>
 

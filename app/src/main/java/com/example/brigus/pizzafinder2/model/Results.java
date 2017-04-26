@@ -1,4 +1,4 @@
-package com.example.brigus.pizzafinder2.Model;
+package com.example.brigus.pizzafinder2.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -7,6 +7,14 @@
             android:icon="@mipmap/ic_autorenew_black_24dp"
             android:orderInCategory="100"
             app:showAsAction="always"/>
+
+    <item
+            android:title="@string/favorites"
+            android:id="@+id/action_favorites"
+            android:icon="@mipmap/ic_favorite_black_24dp"
+            android:orderInCategory="100"
+            app:showAsAction="always"/>
+
     <item
             android:title="@string/settings"
             android:id="@+id/action_settings"

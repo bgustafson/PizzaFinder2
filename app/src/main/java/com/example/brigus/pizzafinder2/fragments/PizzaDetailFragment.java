@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.*;
-import com.example.brigus.pizzafinder2.Model.PizzaLocation;
+import com.example.brigus.pizzafinder2.model.PizzaLocation;
 import com.example.brigus.pizzafinder2.R;
-import com.example.brigus.pizzafinder2.Tasks.PhotosCallable;
+import com.example.brigus.pizzafinder2.tasks.PhotosCallable;
 import com.example.brigus.pizzafinder2.utils.AppUtilityFunctions;
 import com.example.brigus.pizzafinder2.utils.PermissionsManager;
 import com.google.android.gms.ads.AdRequest;
@@ -98,7 +97,7 @@ public class PizzaDetailFragment extends Fragment implements OnMapReadyCallback,
                 .build();
 
         location = getActivity().getIntent().getParcelableExtra("location");
-        coordinates = new LatLng(location.getLocation().getLatitude(), location.getLocation().getLongitude());
+        coordinates = new LatLng(location.getGeometry().getLocation().getLat(), location.getGeometry().getLocation().getLng());
 
         idNumber = location.getId();
 

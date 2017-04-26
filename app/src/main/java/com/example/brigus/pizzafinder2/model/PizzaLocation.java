@@ -1,4 +1,4 @@
-package com.example.brigus.pizzafinder2.Model;
+package com.example.brigus.pizzafinder2.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -15,18 +15,22 @@ public class PizzaLocation implements Parcelable {
     @SerializedName("place_id")
     private String id;
     private String icon;
-    private android.location.Location location;
     private Geometry geometry;
 
-
-    public PizzaLocation(String name, String address, String rating, String price_level, String id, android.location.Location location)
+    public PizzaLocation(String name, String address, String rating, String price_level, String id, String lat, String lng)
     {
         this.name = name;
         this.address = address;
         this.rating = rating;
         this.price_level = price_level;
         this.id = id;
-        this.location = location;
+        this.geometry = new Geometry();
+
+        Location l = new Location();
+
+        l.setLat(Double.parseDouble(lat));
+        l.setLng(Double.parseDouble(lng));
+        this.geometry.setLocation(l);
     }
 
     private PizzaLocation (Parcel in) {
@@ -39,12 +43,12 @@ public class PizzaLocation implements Parcelable {
         this.rating = data[2];
         this.price_level = data[3];
         this.id = data[4];
+        this.geometry = new Geometry();
+        Location l = new Location();
 
-        android.location.Location l = new android.location.Location("");
-
-        l.setLatitude(Double.parseDouble(data[5]));
-        l.setLongitude(Double.parseDouble(data[6]));
-        this.location = l;
+        l.setLat(Double.parseDouble(data[5]));
+        l.setLng(Double.parseDouble(data[6]));
+        this.geometry.setLocation(l);
     }
 
     public String getName() {
@@ -95,12 +99,12 @@ public class PizzaLocation implements Parcelable {
         this.icon = icon;
     }
 
-    public android.location.Location getLocation() {
-        return location;
+    public Geometry getGeometry() {
+        return geometry;
     }
 
-    public void setLocation(android.location.Location location) {
-        this.location = location;
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
     }
 
     @Override
@@ -133,25 +137,48 @@ public class PizzaLocation implements Parcelable {
     };
 
 
-    class Geometry {
+    public class Geometry {
 
-        Location location;
+        @SerializedName("location")
+        private Location location;
 
         public Location getLocation() {
             return location;
         }
+
+        public void setLocation(Location location) {
+            this.location = location;
+        }
     }
 
-    class Location {
-        String lat;
-        String lng;
 
-        public String getLat() {
+    public class Location {
+        double lat;
+        double lng;
+
+        public Location() {
+
+        }
+
+        public Location(double lat, double lng) {
+            this.lat = lat;
+            this.lng = lng;
+        }
+
+        public double getLat() {
             return lat;
         }
 
-        public String getLng() {
+        public double getLng() {
             return lng;
+        }
+
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+        public void setLng(double lng) {
+            this.lng = lng;
         }
     }
 }
