@@ -14,6 +14,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -25,15 +26,15 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
     private static final String API_KEY = "AIzaSyDhIhAAThws366XlCyqtIAK-SfBGsctlJg";
 
-    private AsyncResponse delegate = null;
+    private WeakReference<AsyncResponse> weakDelegate = null;
     private ArrayList<PizzaLocation> locations;
 
     public GoogleNearbySearchTask(AsyncResponse delegate) {
-        this.delegate = delegate;
+        this.weakDelegate = new WeakReference<>(delegate);
     }
 
     public void setDelegate(AsyncResponse delegate) {
-        this.delegate = delegate;
+        this.weakDelegate = new WeakReference<>(delegate);
     }
 
     protected Void doInBackground(final Location... location) {
@@ -41,7 +42,10 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
 
         if (location[0] == null){
 
-            delegate.processFinish(locations);
+            AsyncResponse delegate = weakDelegate.get();
+            if(delegate != null) {
+                delegate.processFinish(locations);
+            }
             return null;
         }
 
@@ -50,35 +54,42 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
 
         //try {
 
-            SharedPreferences preferences = AppClass.getInstance().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
-            String searchRadius = preferences.getString(DEFAULT_RADIUS_KEY, DEFAULT_RADIUS);
+        SharedPreferences preferences = AppClass.getInstance().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
+        String searchRadius = preferences.getString(DEFAULT_RADIUS_KEY, DEFAULT_RADIUS);
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .client(client)
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-            GoogleNearbySearchService service = retrofit.create(GoogleNearbySearchService.class);
-            Call<Results> call = service.listLocations(location[0].getLatitude() + "," + location[0].getLongitude(),
-                    searchRadius, "food", "pizza", "true", API_KEY);
+        GoogleNearbySearchService service = retrofit.create(GoogleNearbySearchService.class);
+        Call<Results> call = service.listLocations(location[0].getLatitude() + "," + location[0].getLongitude(),
+                searchRadius, "food", "pizza", "true", API_KEY);
 
-            call.enqueue(new Callback<Results>() {
-                @Override
-                public void onResponse(Call<Results> call, Response<Results> response) {
+        call.enqueue(new Callback<Results>() {
+            @Override
+            public void onResponse(Call<Results> call, Response<Results> response) {
 
-                    // handle response here
-                    Results body = response.body();
-                    locations.addAll(body.getResults());
+                // handle response here
+                Results body = response.body();
+                locations.addAll(body.getResults());
+
+                AsyncResponse delegate = weakDelegate.get();
+                if(delegate != null) {
                     delegate.processFinish(locations);
                 }
+            }
 
-                @Override
-                public void onFailure(Call<Results> call, Throwable throwable) {
+            @Override
+            public void onFailure(Call<Results> call, Throwable throwable) {
 
+                AsyncResponse delegate = weakDelegate.get();
+                if(delegate != null) {
                     delegate.processFinish(locations);
                 }
-            });
+            }
+        });
 
 
             /*String placeSearchURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
@@ -133,6 +144,6 @@ public class GoogleNearbySearchTask extends AsyncTask<Location, Integer, Void> {
 
 
     //protected void onPostExecute(ArrayList<PizzaLocation> result) {
-        //delegate.processFinish(result);
+    //delegate.processFinish(result);
     //}
 }
